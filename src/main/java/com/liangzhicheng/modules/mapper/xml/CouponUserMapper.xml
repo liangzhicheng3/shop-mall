@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liangzhicheng.modules.mapper.ICouponUserMapper">
+
+    <resultMap id="couponUserMap" type="com.liangzhicheng.modules.entity.CouponUserEntity">
+        <result property="id" column="id"/>
+        <result property="couponId" column="coupon_id"/>
+        <result property="couponNumber" column="coupon_number"/>
+        <result property="userId" column="user_id"/>
+        <result property="usedTime" column="used_time"/>
+        <result property="addTime" column="add_time"/>
+        <result property="orderId" column="order_id"/>
+        <result property="couponStatus" column="coupon_status"/>
+    </resultMap>
+
+    <select id="queryListSelf" resultType="com.liangzhicheng.modules.entity.CouponUserEntity" resultMap="couponUserMap">
+        SELECT
+               uc.id,
+               uc.coupon_id,
+               uc.coupon_number,
+               uc.user_id,
+               uc.used_time,
+               uc.add_time,
+               uc.order_id,
+               u.username userName,
+               coupon.name couponName
+        FROM test_user_coupon uc
+        LEFT JOIN test_user u ON uc.user_id = u.id
+        LEFT JOIN test_coupon coupon ON uc.coupon_id = coupon.id
+        WHERE 1 = 1
+        <if test="userName != null and userName.trim() != ''">
+            AND u.username LIKE CONCAT('%', #{userName}, '%')
+        </if>
+        <if test="couponName != null and couponName.trim() != ''">
+            AND coupon.name LIKE CONCAT('%', #{couponName}, '%')
+        </if>
+        <choose>
+            <when test="sortField != null and sortField.trim() != ''">
+                ORDER BY ${sortField} ${sortOrder}
+            </when>
+            <otherwise>
+                ORDER BY uc.id DESC
+            </otherwise>
+        </choose>
+    </select>
+
+</mapper>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liangzhicheng.modules.mapper.IApiCouponUserMapper">
+
+    <resultMap id="couponUserMap" type="com.liangzhicheng.modules.entity.CouponUserEntity">
+        <result property="id" column="id"/>
+        <result property="couponId" column="coupon_id"/>
+        <result property="couponNumber" column="coupon_number"/>
+        <result property="userId" column="user_id"/>
+        <result property="couponStatus" column="coupon_status"/>
+
+        <result property="typeMoney" column="type_money"/>
+        <result property="useStartDate" column="use_start_date"/>
+        <result property="useEndDate" column="use_end_date"/>
+        <result property="minGoodsAmount" column="min_goods_amount"/>
+    </resultMap>
+
+    <select id="getSelf" resultMap="couponUserMap">
+        SELECT
+               c.name couponName,
+               c.type_money,
+               c.send_type,
+               c.min_amount,
+               c.max_amount,
+               c.send_start_date,
+               c.send_end_date,
+               c.use_start_date,
+               c.use_end_date,
+               c.min_goods_amount,
+               cu.id,
+               cu.coupon_id,
+               cu.coupon_number,
+               cu.user_id,
+               cu.coupon_status
+        FROM test_coupon c
+        LEFT JOIN test_coupon_user cu ON c.id = cu.coupon_id
+        WHERE 1 = 1
+        AND cu.id = #{id}
+    </select>
+
+    <select id="getCouponUser" resultMap="couponUserMap">
+        SELECT
+               c.name couponName,
+               c.type_money,
+               c.send_type,
+               c.min_amount,
+               c.max_amount,
+               c.send_start_date,
+               c.send_end_date,
+               c.use_start_date,
+               c.use_end_date,
+               c.min_goods_amount,
+               cu.id,
+               cu.coupon_id,
+               cu.coupon_number,
+               cu.user_id,
+               cu.coupon_status
+        FROM test_coupon c
+        LEFT JOIN test_coupon_user cu ON c.id = cu.coupon_id
+        WHERE 1 = 1
+        <if test="userId != null">
+            AND cu.user_id = #{userId}
+        </if>
+        <if test="sendType != null">
+            AND c.send_type = #{sendType}
+        </if>
+        <if test="couponStatus != null">
+            AND cu.coupon_status = #{couponStatus}
+        </if>
+        <if test="couponNumber != null">
+            AND cu.coupon_number = #{couponNumber}
+        </if>
+        <if test="sourceKey != null and sourceKey.trim() != ''">
+            AND cu.source_key = #{sourceKey}
+        </if>
+        <if test="unUsed != null and unUsed == true">
+            AND cu.used_time IS NULL AND (cu.order_id IS NULL OR cu.order_id = 0)
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liangzhicheng.modules.mapper.IFootprintMapper">
+
+    <resultMap id="footprintMap" type="com.liangzhicheng.modules.entity.FootprintEntity">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="addTime" column="add_time"/>
+    </resultMap>
+
+    <select id="queryListSelf" resultType="com.liangzhicheng.modules.entity.FootprintEntity" resultMap="footprintMap">
+        SELECT
+               foot.* ,
+               u.username userName,
+               goods.name goodsName
+        FROM test_footprint foot
+        LEFT JOIN test_user u ON foot.user_id = u.id
+        LEFT JOIN test_goods goods ON foot.goods_id = goods.id
+        <choose>
+            <when test="sortField != null and sortField.trim() != ''">
+                ORDER BY ${sortField} ${sortOrder}
+            </when>
+            <otherwise>
+                ORDER BY foot.id DESC
+            </otherwise>
+        </choose>
+    </select>
+
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liangzhicheng.modules.mapper.ICartMapper">
+
+    <resultMap id="cartMap" type="com.liangzhicheng.modules.entity.CartEntity">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="sessionId" column="session_id"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="goodsSn" column="goods_sn"/>
+        <result property="productId" column="product_id"/>
+        <result property="goodsName" column="goods_name"/>
+        <result property="marketPrice" column="market_price"/>
+        <result property="retailPrice" column="retail_price"/>
+        <result property="number" column="number"/>
+        <result property="goodsSpecifitionNameValue" column="goods_specifition_name_value"/>
+        <result property="goodsSpecifitionIds" column="goods_specifition_ids"/>
+        <result property="checked" column="checked"/>
+        <result property="listPicUrl" column="list_pic_url"/>
+    </resultMap>
+
+    <select id="queryListSelf" resultType="com.liangzhicheng.modules.entity.CartEntity" resultMap="cartMap">
+        SELECT
+               c.*,
+               u.username userName
+        FROM test_cart c
+        LEFT JOIN test_user u ON c.user_id = u.id
+        <choose>
+            <when test="sortField != null and sortField.trim() != ''">
+                ORDER BY ${sortField} ${sortOrder}
+            </when>
+            <otherwise>
+                ORDER BY c.id DESC
+            </otherwise>
+        </choose>
+    </select>
+
+</mapper>

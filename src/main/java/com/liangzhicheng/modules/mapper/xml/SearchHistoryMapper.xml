@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liangzhicheng.modules.mapper.ISearchHistoryMapper">
+
+    <resultMap id="searchHistoryMap" type="com.liangzhicheng.modules.entity.SearchHistoryEntity">
+        <result property="id" column="id"/>
+        <result property="keyword" column="keyword"/>
+        <result property="from" column="from"/>
+        <result property="addTime" column="add_time"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+
+    <select id="queryListSelf" resultMap="searchHistoryMap">
+        SELECT
+               sh.*,
+               u.username userName
+        FROM test_search_history sh
+        LEFT JOIN test_user u ON sh.user_id = u.id
+        <choose>
+            <when test="sortField != null and sortField.trim() != ''">
+                ORDER BY ${sortField} ${sortOrder}
+            </when>
+            <otherwise>
+                ORDER BY sh.id DESC
+            </otherwise>
+        </choose>
+    </select>
+
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liangzhicheng.modules.mapper.IApiGoodsSpecificationMapper">
+
+    <resultMap id="goodsSpecificationMap" type="com.liangzhicheng.modules.entity.GoodsSpecificationEntity">
+        <result property="id" column="id"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="specificationId" column="specification_id"/>
+        <result property="value" column="value"/>
+        <result property="picUrl" column="pic_url"/>
+
+        <result property="name" column="name"/>
+    </resultMap>
+
+    <select id="queryListSelf" resultMap="goodsSpecificationMap">
+        SELECT
+        <if test="fields != null and fields != ''">
+            ${fields}
+        </if>
+        <if test="fields == null or fields == ''">
+            gs.*
+        </if>
+        FROM test_goods_specification gs
+        <if test="specification == true">
+            INNER JOIN test_specification s ON gs.specification_id = s.id
+        </if>
+        WHERE 1 = 1
+        <if test="goodsId != null">
+            AND gs.goods_id = #{goodsId}
+        </if>
+        <if test="ids != null">
+            AND  gs.id IN
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        <choose>
+            <when test="sortField != null and sortField.trim() != ''">
+                ORDER BY ${sortField} ${sortOrder}
+            </when>
+            <otherwise>
+                ORDER BY gs.id DESC
+            </otherwise>
+        </choose>
+    </select>
+
+</mapper>

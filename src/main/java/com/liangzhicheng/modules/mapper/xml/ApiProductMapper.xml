@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liangzhicheng.modules.mapper.IApiProductMapper">
+
+    <resultMap id="productMap" type="com.liangzhicheng.modules.entity.ProductEntity">
+        <result property="id" column="id"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="goodsSpecificationIds" column="goods_specification_ids"/>
+        <result property="goodsSn" column="goods_sn"/>
+        <result property="goodsNumber" column="goods_number"/>
+        <result property="retailPrice" column="retail_price"/>
+        <result property="marketPrice" column="market_price"/>
+
+        <result property="listPicUrl" column="list_pic_url"/>
+    </resultMap>
+
+    <select id="getSelf" resultMap="productMap">
+        SELECT
+               product.*,
+               goods.name goodsName,
+               goods.list_pic_url
+        FROM test_product product
+        LEFT JOIN test_goods goods ON product.goods_id = goods.id
+        WHERE product.id = #{id}
+    </select>
+
+    <select id="queryListSelf" resultMap="productMap">
+        SELECT
+               product.*,
+               goods.name goodsName,
+               goods.list_pic_url listPicUrl
+        FROM test_product product
+        LEFT JOIN test_goods goods ON product.goods_id = goods.id
+        WHERE 1 = 1
+        <if test="goodsId != null">
+            AND product.goods_id = #{goodsId}
+        </if>
+        <choose>
+            <when test="sortField != null and sortField.trim() != ''">
+                ORDER BY ${sortField} ${sortOrder}
+            </when>
+            <otherwise>
+                ORDER BY product.id DESC
+            </otherwise>
+        </choose>
+    </select>
+
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liangzhicheng.modules.mapper.IGoodsSpecificationMapper">
+
+    <resultMap id="goodsSpecificationMap" type="com.liangzhicheng.modules.entity.GoodsSpecificationEntity">
+        <result property="id" column="id"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="specificationId" column="specification_id"/>
+        <result property="value" column="value"/>
+        <result property="picUrl" column="pic_url"/>
+    </resultMap>
+
+    <select id="queryListSelf" resultType="com.liangzhicheng.modules.entity.GoodsSpecificationEntity" resultMap="goodsSpecificationMap">
+        SELECT
+               gs.id,
+               gs.goods_id,
+               gs.specification_id,
+               gs.value,
+               gs.pic_url,
+               goods.name goodsName,
+               s.name specificationName
+        FROM test_goods_specification gs
+        LEFT JOIN test_goods goods ON goods.id = gs.goods_id
+        LEFT JOIN test_specification s ON s.id = gs.specification_id
+        WHERE 1 = 1
+        <if test="goodsName != null and goodsName.trim() != ''">
+            AND goods.name LIKE CONCAT('%', #{goodsName}, '%')
+        </if>
+        <if test="goodsId != null">
+            AND gs.goods_id = #{goodsId}
+        </if>
+        <if test="specificationId != null">
+            AND gs.specification_id = #{specificationId}
+        </if>
+        <choose>
+            <when test="sortField != null and sortField.trim() != ''">
+                ORDER BY ${sortField} ${sortOrder}
+            </when>
+            <otherwise>
+                ORDER BY gs.id DESC
+            </otherwise>
+        </choose>
+    </select>
+
+</mapper>

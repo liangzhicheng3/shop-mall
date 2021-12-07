@@ -1,0 +1,13 @@
+Goods：
+1.品牌(test_brand)->商品归属哪个品牌
+2.分类(test_category)->商品归属哪个分类，例如居家，居家下有被枕、床品件套
+3.分类属性(test_attribute_category)->商品归属哪个分类属性，例如被枕有夏天、冬天
+4.属性(test_attribute)->绑定分类属性，例如尺寸、面料、填充物
+5.商品(test_goods)->绑定品牌、分类、分类属性
+6.商品属性(test_goods_attribute)->绑定商品、属性
+
+7.规格(test_specification)->各种商品规格，例如颜色、码数、重量
+8.商品规格(test_goods_specification)->绑定商品、规格
+
+Product：
+9.产品(test_product)->商品的规格属性

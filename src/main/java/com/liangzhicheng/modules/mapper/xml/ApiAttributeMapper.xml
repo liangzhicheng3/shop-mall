@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liangzhicheng.modules.mapper.IApiAttributeMapper">
+
+    <resultMap id="attributeMap" type="com.liangzhicheng.modules.entity.AttributeEntity">
+        <result property="id" column="id"/>
+        <result property="attributeCategoryId" column="attribute_category_id"/>
+        <result property="name" column="name"/>
+        <result property="inputType" column="input_type"/>
+        <result property="value" column="value"/>
+        <result property="sortOrder" column="sort_order"/>
+    </resultMap>
+
+    <select id="queryListSelf" resultMap="attributeMap">
+        SELECT
+        <if test="fields != null and fields != ''">
+            ${fields}
+        </if>
+        <if test="fields == null or fields == ''">
+            *
+        </if>
+        FROM test_attribute attr
+        LEFT JOIN test_goods_attribute ga ON ga.attribute_id = attr.id
+        WHERE 1 = 1
+        <if test="goodsId != null">
+            AND ga.goods_id = #{goodsId}
+        </if>
+        <choose>
+            <when test="sortField != null and sortField.trim() != ''">
+                ORDER BY ${sortField} ${sortOrder}
+            </when>
+            <otherwise>
+                ORDER BY attr.id DESC
+            </otherwise>
+        </choose>
+    </select>
+
+</mapper>
