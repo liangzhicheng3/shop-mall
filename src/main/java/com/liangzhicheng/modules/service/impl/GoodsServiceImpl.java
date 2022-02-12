@@ -37,7 +37,7 @@ public class GoodsServiceImpl extends ServiceImpl<IGoodsMapper, GoodsEntity> imp
         List<GoodsAttributeEntity> attrListRequest = goods.getAttributeEntityList();
         if(attrListRequest != null && attrListRequest.size() > 0){
             List<GoodsAttributeEntity> attrList = new ArrayList<>(attrListRequest.size());
-            for(GoodsAttributeEntity attr : attrList){
+            for(GoodsAttributeEntity attr : attrListRequest){
                 attr.setGoodsId(id);
                 attrList.add(attr);
             }
